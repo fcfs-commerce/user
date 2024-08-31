@@ -1,12 +1,13 @@
 package com.sparta.userservice.user.service;
 
+import com.sparta.userservice.global.dto.ApiResponse;
 import com.sparta.userservice.global.exception.CustomException;
 import com.sparta.userservice.global.exception.ExceptionCode;
 import com.sparta.userservice.global.security.service.EncryptService;
+import com.sparta.userservice.global.util.ApiResponseUtil;
 import com.sparta.userservice.user.dto.request.EmailRequestDto;
 import com.sparta.userservice.user.dto.request.EmailVerificationRequestDto;
-import com.sparta.userservice.user.dto.response.EmailResponseDto;
-import com.sparta.userservice.user.dto.response.EmailVerificationResponseDto;
+import com.sparta.userservice.user.dto.response.EmailVerificationDto;
 import com.sparta.userservice.user.repository.EmailRepository;
 import com.sparta.userservice.user.repository.UserRepository;
 import jakarta.mail.Message.RecipientType;
@@ -30,7 +31,7 @@ public class EmailServiceImpl implements EmailService {
   private final EncryptService encryptService;
 
   @Override
-  public EmailResponseDto sendEmail(EmailRequestDto requestDto) {
+  public ApiResponse sendEmail(EmailRequestDto requestDto) {
     // 이미 존재하는 회원인지 판별
     boolean isExist = findUserByEmail(requestDto.getEmail());
     if (isExist) {
@@ -47,16 +48,18 @@ public class EmailServiceImpl implements EmailService {
     MimeMessage mimeMessage =  createMail(requestDto, code);
     javaMailSender.send(mimeMessage);
 
-    return EmailResponseDto.from(code);
+    return ApiResponseUtil.createSuccessResponse("Email sent successfully", null);
   }
 
   @Override
-  public EmailVerificationResponseDto matchRandomCode(EmailVerificationRequestDto requestDto) {
+  public ApiResponse matchRandomCode(EmailVerificationRequestDto requestDto) {
     String code = emailRepository.getValueByKey(requestDto.getEmail());
 
     boolean certified = code != null && code.matches(requestDto.getCode());
 
-    return EmailVerificationResponseDto.from(certified);
+    EmailVerificationDto emailVerificationResponseDto = EmailVerificationDto.from(certified);
+
+    return ApiResponseUtil.createSuccessResponse("Email verification code check was performed successfully", emailVerificationResponseDto);
   }
 
   private boolean findUserByEmail(String email) {

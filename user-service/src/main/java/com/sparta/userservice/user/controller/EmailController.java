@@ -1,9 +1,8 @@
 package com.sparta.userservice.user.controller;
 
+import com.sparta.userservice.global.dto.ApiResponse;
 import com.sparta.userservice.user.dto.request.EmailRequestDto;
 import com.sparta.userservice.user.dto.request.EmailVerificationRequestDto;
-import com.sparta.userservice.user.dto.response.EmailResponseDto;
-import com.sparta.userservice.user.dto.response.EmailVerificationResponseDto;
 import com.sparta.userservice.user.service.EmailService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,18 +23,18 @@ public class EmailController {
   private final EmailService emailService;
 
   @PostMapping
-  public ResponseEntity<EmailResponseDto> sendEmail(@RequestBody @Valid EmailRequestDto requestDto) {
+  public ResponseEntity<ApiResponse> sendEmail(@RequestBody @Valid EmailRequestDto requestDto) {
     log.info("이메일 인증 요청");
-    EmailResponseDto responseDto = emailService.sendEmail(requestDto);
-    return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    ApiResponse apiResponse = emailService.sendEmail(requestDto);
+    return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
   }
 
   @PostMapping("/verification")
-  public ResponseEntity<EmailVerificationResponseDto> matchRandomCode(@RequestBody
+  public ResponseEntity<ApiResponse> matchRandomCode(@RequestBody
       EmailVerificationRequestDto requestDto) {
     log.info("이메일 인증 코드 검증");
-    EmailVerificationResponseDto responseDto = emailService.matchRandomCode(requestDto);
-    return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    ApiResponse apiResponse = emailService.matchRandomCode(requestDto);
+    return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
   }
 
 }

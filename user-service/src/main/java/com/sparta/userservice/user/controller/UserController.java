@@ -1,7 +1,7 @@
 package com.sparta.userservice.user.controller;
 
+import com.sparta.userservice.global.dto.ApiResponse;
 import com.sparta.userservice.user.dto.request.SignUpRequestDto;
-import com.sparta.userservice.user.dto.response.SignUpResponseDto;
 import com.sparta.userservice.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,10 +22,10 @@ public class UserController {
   private final UserService userService;
 
   @PostMapping
-  public ResponseEntity<SignUpResponseDto> signup(@RequestBody @Valid SignUpRequestDto requestDto) {
+  public ResponseEntity<ApiResponse> signup(@RequestBody @Valid SignUpRequestDto requestDto) {
     log.info("회원 가입 요청");
-    SignUpResponseDto responseDto = userService.signup(requestDto);
-    return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+    ApiResponse apiResponse = userService.signup(requestDto);
+    return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
   }
 
 }

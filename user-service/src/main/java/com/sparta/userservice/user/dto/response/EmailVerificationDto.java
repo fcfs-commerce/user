@@ -7,12 +7,12 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class EmailVerificationResponseDto {
+public class EmailVerificationDto {
 
   private boolean certified;
 
-  public static EmailVerificationResponseDto from(boolean certified) {
-    return EmailVerificationResponseDto.builder()
+  public static EmailVerificationDto from(boolean certified) {
+    return EmailVerificationDto.builder()
         .certified(certified)
         .build();
   }

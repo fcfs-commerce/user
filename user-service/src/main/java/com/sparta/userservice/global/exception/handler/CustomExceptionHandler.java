@@ -1,7 +1,8 @@
 package com.sparta.userservice.global.exception.handler;
 
+import com.sparta.userservice.global.dto.ApiResponse;
 import com.sparta.userservice.global.exception.CustomException;
-import com.sparta.userservice.global.exception.handler.dto.ExceptionResponse;
+import com.sparta.userservice.global.util.ApiResponseUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -18,20 +19,20 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class CustomExceptionHandler {
 
   @ExceptionHandler(CustomException.class)
-  public ResponseEntity<ExceptionResponse> handleException(CustomException e) {
+  public ResponseEntity<ApiResponse> handleException(CustomException e) {
     log.info("예외 발생 : {}, {}, {}", e, e.getStatus(), e.getMessage());
-    ExceptionResponse response = ExceptionResponse.from(e);
-    return ResponseEntity.status(e.getStatus()).body(response);
+    ApiResponse apiResponse = ApiResponseUtil.createExceptionResponse(e.getStatus(), e.getMessage());
+    return ResponseEntity.status(e.getStatus()).body(apiResponse);
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity<ExceptionResponse> handleException( MethodArgumentNotValidException e,
+  public ResponseEntity<ApiResponse> handleException( MethodArgumentNotValidException e,
       HttpServletRequest request) {
     log.info("유효성 검증 실패");
     HttpStatus status = HttpStatus.BAD_REQUEST;
     String errorMessage = fieldErrorMessage(e);
-    ExceptionResponse response = ExceptionResponse.of(status, errorMessage);
-    return ResponseEntity.status(status).body(response);
+    ApiResponse apiResponse = ApiResponseUtil.createExceptionResponse(status, errorMessage);
+    return ResponseEntity.status(status).body(apiResponse);
   }
 
   private String fieldErrorMessage(MethodArgumentNotValidException e) {

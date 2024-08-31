@@ -1,10 +1,11 @@
 package com.sparta.userservice.user.service;
 
+import com.sparta.userservice.global.dto.ApiResponse;
 import com.sparta.userservice.global.exception.CustomException;
 import com.sparta.userservice.global.exception.ExceptionCode;
 import com.sparta.userservice.global.security.service.EncryptService;
+import com.sparta.userservice.global.util.ApiResponseUtil;
 import com.sparta.userservice.user.dto.request.SignUpRequestDto;
-import com.sparta.userservice.user.dto.response.SignUpResponseDto;
 import com.sparta.userservice.user.entity.User;
 import com.sparta.userservice.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,7 @@ public class UserServiceImpl implements UserService{
   private final EncryptService encryptService;
 
   @Override
-  public SignUpResponseDto signup(SignUpRequestDto requestDto) {
+  public ApiResponse signup(SignUpRequestDto requestDto) {
     // 이미 존재하는 회원인지 판별
     boolean isExist = findUserByUsername(requestDto.getUsername());
     if (isExist) {
@@ -42,7 +43,7 @@ public class UserServiceImpl implements UserService{
         address, requestDto.getRole());
     userRepository.save(user);
 
-    return SignUpResponseDto.from(user);
+    return ApiResponseUtil.createSuccessResponse("Sign up request processed successfully.", null);
   }
 
   private boolean findUserByUsername(String username) {
