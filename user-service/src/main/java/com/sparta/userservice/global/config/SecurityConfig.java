@@ -71,6 +71,7 @@ public class SecurityConfig {
     http.authorizeHttpRequests(
         (authorizeHttpRequests) -> authorizeHttpRequests
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+            .requestMatchers("/api/v1/users/external/**").permitAll()
             .requestMatchers(HttpMethod.POST, "/api/v1/users/**").permitAll()
             .anyRequest().authenticated()
     );

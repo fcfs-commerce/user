@@ -46,6 +46,13 @@ public class UserServiceImpl implements UserService{
     return ApiResponseUtil.createSuccessResponse("Sign up request processed successfully.", null);
   }
 
+  @Override
+  public String findUserName(Long userId) {
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> CustomException.from(ExceptionCode.USER_NOT_FOUND));
+    return user.getName();
+  }
+
   private boolean findUserByUsername(String username) {
     return userRepository.existsByUsername(username);
   }
