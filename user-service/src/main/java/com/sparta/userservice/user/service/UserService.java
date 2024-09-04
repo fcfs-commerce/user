@@ -7,4 +7,5 @@ public interface UserService {
 
   ApiResponse signup(SignUpRequestDto requestDto);
 
+  String findUserName(Long userId);
 }
