@@ -30,9 +30,4 @@ public class UserController {
     return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
   }
 
-  @GetMapping("/external/{userId}")
-  public String username(@PathVariable Long userId) {
-    return userService.findUserName(userId);
-  }
-
 }
